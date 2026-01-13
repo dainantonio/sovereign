@@ -1,23 +1,38 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FileText, ArrowRight, Wand2, Check, AlertCircle, ArrowLeft, Download, Copy, RefreshCw } from 'lucide-react';
+import { FileText, Wand2, Check, AlertCircle, ArrowLeft, Copy, Download, RefreshCw, Globe } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ResumeOptimizerPage() {
   const [isOptimizing, setIsOptimizing] = useState(false);
   const [step, setStep] = useState<'input' | 'results'>('input');
+  
   const [resumeText, setResumeText] = useState(
     "Experience:\n\nSenior Copywriter, AdAgency (2018-2023)\n- Wrote blog posts and social media copy for B2B clients.\n- Managed a team of 3 junior writers.\n- Proofread content for grammar and tone.\n- Used SEO tools to improve ranking."
   );
 
-  const handleOptimize = () => {
+  const [optimizedResult, setOptimizedResult] = useState<{ analysis: string, optimizedContent: string } | null>(null);
+
+  const handleOptimize = async () => {
     setIsOptimizing(true);
-    // Simulate AI processing time
-    setTimeout(() => {
+    
+    try {
+      // Mock API call simulation if real API fails or isn't set up
+      // Replace this block with the real fetch call if you have the API route working
+      setTimeout(() => {
+          setOptimizedResult({
+              analysis: "We've reframed your writing experience as 'content engineering' and highlighted your use of data-driven tools (SEO) as a proxy for algorithmic logic. This aligns better with prompt engineering requirements.",
+              optimizedContent: "AI Content & Prompt Specialist (Formerly Senior Copywriter)\nAdAgency | 2018 - 2023\n\n- Engineered a library of 50+ system prompts for GPT-4 to automate first-draft generation for B2B blogs.\n- Led a 'Human-in-the-Loop' QA process, training 3 junior writers to evaluate and refine AI outputs using RLHF principles.\n- Utilized data-driven SEO tools to optimize content structure, demonstrating logic-based content strategy."
+          });
+          setStep('results');
+          setIsOptimizing(false);
+      }, 2000);
+
+    } catch (error) {
+      console.error(error);
       setIsOptimizing(false);
-      setStep('results');
-    }, 2000);
+    }
   };
 
   return (
@@ -31,9 +46,16 @@ export default function ResumeOptimizerPage() {
           </Link>
           <span className="font-bold text-lg">AI Resume Optimizer</span>
         </div>
-        <div className="flex items-center gap-2 px-3 py-1 bg-purple-50 text-purple-700 text-sm font-bold rounded-full border border-purple-100">
-          <Wand2 size={14} />
-          <span>Target: AI Prompt Engineer</span>
+        
+        {/* NEW BUTTON: Direct Access to Live Resume */}
+        <div className="flex items-center gap-3">
+            <Link href="/resume/live" className="flex items-center gap-2 px-4 py-2 text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition text-sm font-bold shadow-sm">
+                <Globe size={16} /> View Live Resume
+            </Link>
+            <div className="hidden md:flex items-center gap-2 px-3 py-1 bg-purple-50 text-purple-700 text-sm font-bold rounded-full border border-purple-100">
+                <Wand2 size={14} />
+                <span>Target: AI Prompt Engineer</span>
+            </div>
         </div>
       </nav>
 
@@ -64,7 +86,7 @@ export default function ResumeOptimizerPage() {
                 >
                   {isOptimizing ? (
                     <>
-                      <RefreshCw size={20} className="animate-spin" /> Optimizing...
+                      <RefreshCw size={20} className="animate-spin" /> Analyzing...
                     </>
                   ) : (
                     <>
@@ -92,7 +114,7 @@ export default function ResumeOptimizerPage() {
           </div>
         )}
 
-        {step === 'results' && (
+        {step === 'results' && optimizedResult && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-140px)]">
               
@@ -103,43 +125,39 @@ export default function ResumeOptimizerPage() {
                   
                   <div className="flex items-center gap-4 mb-6">
                     <div className="w-16 h-16 rounded-full border-4 border-green-500 flex items-center justify-center text-xl font-bold text-green-700 bg-green-50">
-                      92
+                      95
                     </div>
                     <div>
                       <p className="font-bold text-slate-900">Match Score</p>
-                      <p className="text-sm text-slate-500">Your profile now strongly signals "AI Prompt Engineer"</p>
+                      <p className="text-sm text-slate-500">Your profile now signals high-value technical skills.</p>
                     </div>
                   </div>
 
                   <div className="space-y-4">
-                    <div className="p-4 bg-red-50 rounded-lg border border-red-100">
-                      <h4 className="flex items-center gap-2 font-bold text-red-700 mb-2">
-                        <AlertCircle size={16} /> Removed Weak Phrases
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                         <span className="px-2 py-1 bg-white border border-red-200 rounded text-xs text-red-600 line-through">Managed a team</span>
-                         <span className="px-2 py-1 bg-white border border-red-200 rounded text-xs text-red-600 line-through">Proofread content</span>
-                      </div>
-                    </div>
-
                     <div className="p-4 bg-green-50 rounded-lg border border-green-100">
                       <h4 className="flex items-center gap-2 font-bold text-green-700 mb-2">
-                        <Check size={16} /> Added High-Value Keywords
+                        <Check size={16} /> AI Insight
                       </h4>
-                      <div className="flex flex-wrap gap-2">
-                         <span className="px-2 py-1 bg-white border border-green-200 rounded text-xs text-green-700 font-bold">LLM Optimization</span>
-                         <span className="px-2 py-1 bg-white border border-green-200 rounded text-xs text-green-700 font-bold">QA Testing</span>
-                         <span className="px-2 py-1 bg-white border border-green-200 rounded text-xs text-green-700 font-bold">Prompt Iteration</span>
-                      </div>
+                      <p className="text-sm text-green-800 leading-relaxed">
+                        {optimizedResult.analysis}
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-gradient-to-br from-purple-600 to-blue-600 p-6 rounded-xl text-white shadow-lg">
-                   <h3 className="font-bold text-lg mb-2">Why this works</h3>
-                   <p className="text-blue-100 text-sm leading-relaxed">
-                     Recruiters for AI roles prioritize "iterative testing" and "logic" over "grammar" and "creative writing." We reframed your writing background as "Dataset Curation" and "Output Validation."
+                   <h3 className="font-bold text-lg mb-2">Next Step</h3>
+                   <p className="text-blue-100 text-sm leading-relaxed mb-4">
+                     Now that your resume is optimized, publish it to your live profile or practice your narrative.
                    </p>
+                   <div className="flex gap-3">
+                     <Link href="/resume/live" className="px-4 py-2 bg-white text-blue-700 font-bold rounded-lg hover:bg-blue-50 transition text-sm flex items-center gap-2">
+                        <Globe size={16} /> Publish Live
+                     </Link>
+                     <Link href="/interview" className="px-4 py-2 bg-blue-700 text-white font-bold rounded-lg hover:bg-blue-800 transition text-sm">
+                        Practice Interview
+                     </Link>
+                   </div>
                 </div>
               </div>
 
@@ -152,22 +170,8 @@ export default function ResumeOptimizerPage() {
                     <button className="p-2 hover:bg-white rounded-lg transition text-slate-500"><Download size={16} /></button>
                   </div>
                 </div>
-                <div className="flex-1 p-8 bg-white font-mono text-sm leading-relaxed overflow-y-auto text-slate-800">
-                  <p className="font-bold mb-4 text-lg">EXPERIENCE</p>
-                  
-                  <div className="mb-6">
-                    <p className="font-bold">AI Content & Prompt Specialist (Formerly Senior Copywriter)</p>
-                    <p className="text-slate-500 italic mb-2">AdAgency | 2018 - 2023</p>
-                    <ul className="list-disc pl-5 space-y-2">
-                      <li className="bg-green-50 p-1 -ml-1 rounded">Designed and iterated on high-volume text outputs for B2B campaigns, ensuring tone consistency and accuracy (Precursor to RLHF).</li>
-                      <li>Led QA protocols for a team of 3, implementing style guidelines that reduced error rates by 15%.</li>
-                      <li className="bg-green-50 p-1 -ml-1 rounded">Utilized data-driven SEO tools to optimize content structure, demonstrating logic-based content strategy.</li>
-                      <li>Curated large-scale datasets (blog archives) for content restructuring initiatives.</li>
-                    </ul>
-                  </div>
-
-                  <p className="font-bold mb-4 text-lg mt-8">SKILLS</p>
-                  <p>Prompt Engineering (Zero-shot, Few-shot), Content Strategy, Dataset Curation, QA Validation, SEO Logic.</p>
+                <div className="flex-1 p-8 bg-white font-mono text-sm leading-relaxed overflow-y-auto text-slate-800 whitespace-pre-wrap">
+                  {optimizedResult.optimizedContent}
                 </div>
               </div>
 
